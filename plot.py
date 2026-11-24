@@ -30,7 +30,7 @@ def coloured_line(ax, x, y, z, lw):
 fig, (axL, axR) = plt.subplots(1, 2, figsize=(11, 5), constrained_layout=True)
 grey = "0.9"
 
-xlim, ylim = (0.971, 1.024), (0.969, 1.063)
+xlim, ylim = (0.971, 1.05), (0.969, 1.063)
 x = np.linspace(1.0, xlim[1], 200)
 axL.axvspan(xlim[0], 1.0, color=grey, zorder=0)                          # F_AP >= F_AP^L
 axL.fill_between(x, ylim[0], x ** (-1 / 3), color=grey, zorder=0)       # D_V bound, z > z_c
@@ -52,7 +52,7 @@ for ax in (axL, axR):
     ax.axhline(1, color="k", lw=1.5, zorder=2)
     ax.axvline(1, color="k", lw=1.5, zorder=2)
 
-for key, lw in [("thaw", 4.0), ("cpl", 1.5)]:       # thick = thawing, thin = CPL
+for key, lw in [("SS", 4.0), ("cpl", 1.5)]:       # thick = thawing, thin = CPL
     r = data[key]
     coloured_line(axL, r["FAP"], r["DV"], z, lw)
     lc = coloured_line(axR, r["DM"], r["DH"], z, lw)

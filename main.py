@@ -17,8 +17,8 @@ w0 = -0.7
 cpl_res = model.fixed_theta_model(cosmology, model.CPL(w0, -4 * (1 + w0)), thetastar)
 
 #thawing model
-# The paper doesn't say which thawing model. Toy form: w = -1 + (1+w0) a^p.
-w0_th, p = -0.5, 3.0
+
+w0_th, p = -0.5, 2.0
 a = np.geomspace(1e-8, 1.0, 2000)
 w = -1 + (1 + w0_th) * a**p
 thaw_res = model.fixed_theta_model(cosmology, model.specified_w(a, w), thetastar)
@@ -29,6 +29,11 @@ for name, r in [("cpl", cpl_res), ("thaw", thaw_res)]:
     print(f"{name}: H0={r.hubble_parameter(0):.2f}, D_M(z*) rel diff={rel:.1e}")
     assert abs(rel) < 1e-4
 
-out = dict(z=z, cpl=model.ratios(cpl_res, ref, z), thaw=model.ratios(thaw_res, ref, z))
+
+z_grid = np.geomspace(1e-4, 1e8, 2000)     
+a, w, E0 = model.solve_klein_gordon(phi=0.5, z=z_grid, cosmology=cosmology, H0=70)
+res = model.fixed_theta_model(cosmology, model.specified_w(a, w), thetastar)
+#print("res:", res)
+out = dict(z=z, cpl=model.ratios(cpl_res, ref, z), thaw=model.ratios(thaw_res, ref, z), SS = model.ratios(res, ref, z))
 np.save(results_dir/"ratios.npy", out, allow_pickle=True)
 
